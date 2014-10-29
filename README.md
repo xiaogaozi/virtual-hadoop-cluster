@@ -34,6 +34,7 @@ Provision the bare cluster. It will ask you to enter your password, so it can mo
 
 ```bash
 $ cd virtual-hadoop-cluster
+$ librarian-puppet install
 $ vagrant up
 ```
 
