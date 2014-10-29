@@ -14,7 +14,7 @@ As you can see, you'll need at least 5GB of free RAM to run this. If you have le
 
 ## Usage
 
-Depending on the hardware of your computer, installation will probably take between 15 and 25 minutes.
+Depending on the hardware of your computer and your network, installation will probably take hours.
 
 First install [VirtualBox](https://www.virtualbox.org) and [Vagrant](http://www.vagrantup.com).
 
