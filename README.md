@@ -18,13 +18,13 @@ Depending on the hardware of your computer, installation will probably take betw
 
 First install [VirtualBox](https://www.virtualbox.org) and [Vagrant](http://www.vagrantup.com).
 
-Install the Vagrant [Hostmanager plugin](https://github.com/smdahlen/vagrant-hostmanager)
+Install the Vagrant [Hostmanager plugin](https://github.com/smdahlen/vagrant-hostmanager):
 
 ```bash
 $ vagrant plugin install vagrant-hostmanager
 ```
 
-Clone this repository.
+Clone this repository:
 
 ```bash
 $ git clone https://github.com/xiaogaozi/virtual-hadoop-cluster.git
