@@ -1,29 +1,5 @@
-$master_script = <<SCRIPT
-#!/bin/bash
-
-apt-get install curl -y
-REPOCM=${REPOCM:-cm5}
-CM_REPO_HOST=${CM_REPO_HOST:-archive.cloudera.com}
-CM_MAJOR_VERSION=$(echo $REPOCM | sed -e 's/cm\\([0-9]\\).*/\\1/')
-CM_VERSION=$(echo $REPOCM | sed -e 's/cm\\([0-9][0-9]*\\)/\\1/')
-OS_CODENAME=$(lsb_release -sc)
-OS_DISTID=$(lsb_release -si | tr '[A-Z]' '[a-z]')
-if [ $CM_MAJOR_VERSION -ge 4 ]; then
-  cat > /etc/apt/sources.list.d/cloudera-$REPOCM.list <<EOF
-deb [arch=amd64] http://$CM_REPO_HOST/cm$CM_MAJOR_VERSION/$OS_DISTID/$OS_CODENAME/amd64/cm $OS_CODENAME-$REPOCM contrib
-deb-src http://$CM_REPO_HOST/cm$CM_MAJOR_VERSION/$OS_DISTID/$OS_CODENAME/amd64/cm $OS_CODENAME-$REPOCM contrib
-EOF
-curl -s http://$CM_REPO_HOST/cm$CM_MAJOR_VERSION/$OS_DISTID/$OS_CODENAME/amd64/cm/archive.key > key
-apt-key add key
-rm key
-fi
-apt-get update
-export DEBIAN_FRONTEND=noninteractive
-apt-get -q -y --force-yes install oracle-j2sdk1.7 cloudera-manager-server-db cloudera-manager-server cloudera-manager-daemons
-service cloudera-scm-server-db initdb
-service cloudera-scm-server-db start
-service cloudera-scm-server start
-SCRIPT
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
 
 $hosts_script = <<SCRIPT
 cat > /etc/hosts <<EOF
@@ -35,9 +11,16 @@ fe00::0 ip6-localnet
 ff00::0 ip6-mcastprefix
 ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
-
 EOF
 SCRIPT
+
+hosts = [
+  { "name" => "master", "hostname" => "vm-cdh-cluster-nn1", "memory" => "1024", "ip" => "10.211.55.100" },
+  { "name" => "standby", "hostname" => "vm-cdh-cluster-nn2", "memory" => "512", "ip" => "10.211.55.101" },
+  { "name" => "slave1", "hostname" => "vm-cdh-cluster-dn1", "memory" => "1024", "ip" => "10.211.55.110" },
+  { "name" => "slave2", "hostname" => "vm-cdh-cluster-dn2", "memory" => "1024", "ip" => "10.211.55.111" },
+  { "name" => "slave3", "hostname" => "vm-cdh-cluster-dn3", "memory" => "1024", "ip" => "10.211.55.112" },
+]
 
 Vagrant.configure("2") do |config|
 
@@ -51,52 +34,21 @@ Vagrant.configure("2") do |config|
   config.hostmanager.include_offline = true
   config.hostmanager.ignore_private_ip = false
 
-  config.vm.define :master do |master|
-    master.vm.provider :virtualbox do |v|
-      v.name = "vm-cluster-node1"
-      v.customize ["modifyvm", :id, "--memory", "4096"]
+  hosts.each do |host|
+    config.vm.define host["name"] do |vmconfig|
+      vmconfig.vm.provider :virtualbox do |v|
+        v.name = host["hostname"]
+        v.customize ["modifyvm", :id, "--memory", host["memory"]]
+      end
+      vmconfig.vm.network :private_network, ip: host["ip"]
+      vmconfig.vm.hostname = "%s.example.com" % host["hostname"]
+      vmconfig.hostmanager.aliases = [host["hostname"]]
+      vmconfig.vm.provision :shell, :inline => $hosts_script
+      vmconfig.vm.provision "hostmanager"
+      vmconfig.vm.provision "puppet" do |puppet|
+        puppet.module_path = "modules"
+      end
     end
-    master.vm.network :private_network, ip: "10.211.55.100"
-    master.vm.hostname = "vm-cluster-node1"
-    master.vm.provision :shell, :inline => $hosts_script
-    master.vm.provision :hostmanager
-    master.vm.provision :shell, :inline => $master_script
-  end
-
-  config.vm.define :slave1 do |slave1|
-    slave1.vm.box = "precise64"
-    slave1.vm.provider :virtualbox do |v|
-      v.name = "vm-cluster-node2"
-      v.customize ["modifyvm", :id, "--memory", "2048"]
-    end
-    slave1.vm.network :private_network, ip: "10.211.55.101"
-    slave1.vm.hostname = "vm-cluster-node2"
-    slave1.vm.provision :shell, :inline => $hosts_script
-    slave1.vm.provision :hostmanager
-  end
-
-  config.vm.define :slave2 do |slave2|
-    slave2.vm.box = "precise64"
-    slave2.vm.provider :virtualbox do |v|
-      v.name = "vm-cluster-node3"
-      v.customize ["modifyvm", :id, "--memory", "2048"]
-    end
-    slave2.vm.network :private_network, ip: "10.211.55.102"
-    slave2.vm.hostname = "vm-cluster-node3"
-    slave2.vm.provision :shell, :inline => $hosts_script
-    slave2.vm.provision :hostmanager
-  end
-
-  config.vm.define :slave3 do |slave3|
-    slave3.vm.box = "precise64"
-    slave3.vm.provider :virtualbox do |v|
-      v.name = "vm-cluster-node4"
-      v.customize ["modifyvm", :id, "--memory", "2048"]
-    end
-    slave3.vm.network :private_network, ip: "10.211.55.103"
-    slave3.vm.hostname = "vm-cluster-node4"
-    slave3.vm.provision :shell, :inline => $hosts_script
-    slave3.vm.provision :hostmanager
   end
 
 end
