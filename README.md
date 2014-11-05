@@ -6,9 +6,9 @@ With these files you can setup and provision a locally running, virtual Hadoop c
 
 The cluster conists of 5 nodes:
 
-* Master node with 1GB of RAM (Running the NameNode, Hue, ResourceManager etc. after installing the Hadoop services)
-* Standby node with 512M of RAM (Running the standby NameNode etc.)
-* 3 slaves with 1GB of RAM each (Running DataNodes)
+* Master node with 1GB of RAM (Running the NameNode, Hue, ResourceManager, HBase Master etc. after installing the Hadoop services)
+* Standby node with 512M of RAM (Running the standby NameNode)
+* 3 slaves with 1GB of RAM each (Running DataNodes, ZooKeeper, HBase RegionServer and HBase Thrift Server)
 
 As you can see, you'll need at least 5GB of free RAM to run this. If you have less, you can try to remove one machine from the Vagrantfile. This will lead to worse performance though!
 
