@@ -49,6 +49,7 @@ class hadoop::params {
     'vm-cdh-cluster-dn3.example.com'
   ]
   $zookeeper_hosts = $datanode_hosts
+  $hbase_version = '0.98.6+cdh5.2.0+55-1.cdh5.2.0.p0.33~precise-cdh5.2.0'
 }
 
 class hadoop::base {
@@ -80,7 +81,8 @@ class hadoop::base {
     ],
     dfs_name_dir    => '/var/lib/hadoop/name',
     webhdfs_enabled => true,
-    httpfs_enabled  => false
+    httpfs_enabled  => false,
+    lzo_enabled     => true
   }
 
   class { 'cdh::hive':
@@ -96,6 +98,13 @@ class hadoop::base {
 
   class { 'cdh::oozie':
     oozie_host => $hadoop::params::namenode_host
+  }
+
+  # HBase
+  class { 'cdh::hbase':
+    version         => $hadoop::params::hbase_version,
+    namenode_host   => $hadoop::params::namenode_host,
+    zookeeper_hosts => $hadoop::params::zookeeper_hosts
   }
 }
 
@@ -130,6 +139,10 @@ class my::hadoop::master inherits hadoop::base {
     ssl_private_key  => false,
     ssl_certificate  => false
   }
+
+  class { 'cdh::hbase::master':
+    version => $hadoop::params::hbase_version
+  }
 }
 
 class my::hadoop::worker inherits hadoop::base {
@@ -147,6 +160,10 @@ class my::hadoop::worker inherits hadoop::base {
     data_dir => '/var/lib/zookeeper'
   }
   include zookeeper::server
+
+  class { 'cdh::hbase::slave':
+    version => $hadoop::params::hbase_version
+  }
 }
 
 node 'vm-cdh-cluster-nn1.example.com' {

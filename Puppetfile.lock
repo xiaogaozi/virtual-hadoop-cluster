@@ -1,32 +1,34 @@
 FORGE
-  remote: http://forge.puppetlabs.com
+  remote: https://forgeapi.puppetlabs.com
   specs:
-    puppetlabs/apt (1.6.0)
-      puppetlabs/stdlib (>= 2.2.1)
-    puppetlabs/java (1.1.2)
-      puppetlabs/stdlib (>= 2.4.0)
-    puppetlabs/mysql (2.3.1)
-      puppetlabs/stdlib (>= 3.2.0)
-    puppetlabs/stdlib (4.3.2)
-
-GIT
-  remote: https://github.com/ZhihuDev/puppet-cdh.git
-  ref: master
-  sha: bf4a4ba92fe84edc0b80c307553b40d7c68e55a0
-  specs:
-    ZhihuDev/cdh (0.0.1)
+    nanliu-staging (1.0.3)
+    puppetlabs-apt (1.7.0)
+      puppetlabs-stdlib (>= 2.2.1)
+    puppetlabs-java (1.3.0)
+      puppetlabs-stdlib (>= 2.4.0)
+    puppetlabs-mysql (3.3.0)
+      nanliu-staging (~> 1.0)
+      puppetlabs-stdlib (< 5.0.0, >= 3.2.0)
+    puppetlabs-stdlib (4.5.1)
 
 GIT
   remote: https://github.com/xiaogaozi/puppet-zookeeper.git
   ref: master
-  sha: 7a72822adca3113e1061956681417ed9a01f49f2
+  sha: a78f5a7ca2b434760c608a612d382853e4a9b4b1
   specs:
-    xiaogaozi/zookeeper (0.0.1)
+    xiaogaozi-zookeeper (0.0.1)
+
+GIT
+  remote: https://github.com/zhihu/puppet-cdh.git
+  ref: hbase
+  sha: 892ae212777ff6fd7be189a29b3e2a54ee6bf727
+  specs:
+    zhihu-cdh (0.0.1)
 
 DEPENDENCIES
-  ZhihuDev/cdh (>= 0)
-  puppetlabs/apt (>= 0)
-  puppetlabs/java (>= 0)
-  puppetlabs/mysql (>= 0)
-  xiaogaozi/zookeeper (>= 0)
+  puppetlabs-apt (>= 0)
+  puppetlabs-java (>= 0)
+  puppetlabs-mysql (>= 0)
+  xiaogaozi-zookeeper (>= 0)
+  zhihu-cdh (>= 0)
 

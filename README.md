@@ -2,6 +2,7 @@
 
 With these files you can setup and provision a locally running, virtual Hadoop cluster in real distributed fashion for trying out Hadoop and related technologies. It runs the latest Cloudera Hadoop distribution: **CDH 5**.
 
+
 ## Specs
 
 The cluster conists of 5 nodes:
@@ -11,6 +12,7 @@ The cluster conists of 5 nodes:
 * 3 slaves with 1GB of RAM each (Running DataNodes, ZooKeeper, HBase RegionServer and HBase Thrift Server)
 
 As you can see, you'll need at least 5GB of free RAM to run this. If you have less, you can try to remove one machine from the Vagrantfile. This will lead to worse performance though!
+
 
 ## Usage
 
@@ -38,4 +40,10 @@ $ librarian-puppet install
 $ vagrant up
 ```
 
-**Done!** Have fun with your Hadoop cluster.
+You can visit following addresses to ensure everything is OK:
+
+- HDFS: [http://vm-cdh-cluster-nn1.example.com:50070](http://vm-cdh-cluster-nn1.example.com:50070)
+- MapReduce: [http://vm-cdh-cluster-nn1.example.com:8088](http://vm-cdh-cluster-nn1.example.com:8088)
+- HBase: [http://vm-cdh-cluster-nn1.example.com:60010](http://vm-cdh-cluster-nn1.example.com:60010)
+
+Have fun with your Hadoop cluster.
