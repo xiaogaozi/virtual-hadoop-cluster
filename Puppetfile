@@ -6,5 +6,4 @@ mod "puppetlabs/mysql"
 mod "xiaogaozi/zookeeper",
   :git => "https://github.com/xiaogaozi/puppet-zookeeper.git"
 mod "zhihu/cdh",
-  :git => "https://github.com/zhihu/puppet-cdh.git",
-  :ref => "hbase"
+  :git => "https://github.com/zhihu/puppet-cdh.git"

@@ -20,8 +20,8 @@ GIT
 
 GIT
   remote: https://github.com/zhihu/puppet-cdh.git
-  ref: hbase
-  sha: 892ae212777ff6fd7be189a29b3e2a54ee6bf727
+  ref: master
+  sha: b385501c31d39d184c12148fb624a02dd2795128
   specs:
     zhihu-cdh (0.0.1)
 
